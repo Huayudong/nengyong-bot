@@ -1,0 +1,58 @@
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { afterEach, expect, it, vi } from 'vitest'
+import { Markdown } from './Markdown'
+import { MentionContext } from './MentionContext'
+
+afterEach(cleanup)
+
+const LIBRARY_IMAGE = '/Users/me/data/library/UI参考/海报 1.png'
+const LIBRARY_IMAGE_URL = 'file:///Users/me/data/library/UI%E5%8F%82%E8%80%83/%E6%B5%B7%E6%8A%A5%201.png'
+
+function renderReply(text: string, openFile = vi.fn()) {
+  render(
+    <MentionContext
+      value={{
+        bots: [],
+        open: vi.fn(),
+        flows: [],
+        openFlow: vi.fn(),
+        miniApps: [],
+        openMiniApp: vi.fn(),
+        thumbUrl: () => '',
+        fileUrl: (path) => `attachment:${path}`,
+        openFile,
+      }}
+    >
+      <Markdown text={text} />
+    </MentionContext>,
+  )
+  return openFile
+}
+
+it('bolds a phrase that ends in Chinese punctuation and runs straight into more text', () => {
+  render(<Markdown text="**「没找到」**是指路径写错了" />)
+  expect(screen.getByText('「没找到」', { selector: 'strong' })).toBeInTheDocument()
+})
+
+it('shows an image from a file:// URL through the library, by its decoded path', () => {
+  renderReply(`![海报](${LIBRARY_IMAGE_URL})`)
+  expect(screen.getByRole('img', { name: '海报' })).toHaveAttribute('src', `attachment:${LIBRARY_IMAGE}`)
+})
+
+it('shows only the description of a remote image', () => {
+  renderReply('![海报](https://example.com/a.png)')
+  expect(screen.queryByRole('img')).not.toBeInTheDocument()
+  expect(screen.getByText('海报')).toBeInTheDocument()
+})
+
+it('opens the file a file:// link points to', () => {
+  const openFile = renderReply(`[原图链接](${LIBRARY_IMAGE_URL})`)
+  fireEvent.click(screen.getByRole('button', { name: '原图链接' }))
+  expect(openFile).toHaveBeenCalledWith(LIBRARY_IMAGE)
+})
+
+it('opens a library image at full size when clicked', () => {
+  renderReply(`![海报](${LIBRARY_IMAGE_URL})`)
+  fireEvent.click(screen.getByRole('button', { name: '查看 海报' }))
+  expect(screen.getByRole('dialog', { name: '海报' })).toBeInTheDocument()
+})

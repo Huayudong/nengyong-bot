@@ -1,0 +1,151 @@
+export const demo = {
+  bots: {
+    chief: '小满',
+    repo: 'GitHub 数据日报',
+    content: '内容运营',
+    support: 'Bug 反馈整理',
+    release: '发版助理',
+    travel: '旅行计划',
+    fitness: '健身教练',
+    ledger: '家庭记账',
+    ideas: '点子收集箱',
+  },
+  sections: {
+    myApp: '我的 App',
+    life: '生活',
+    family: '家庭',
+  },
+  chief: {
+    plan: `同步功能下个月做完，我拆成三块，分给合适的 Bot：
+
+- **数据**：GitHub 数据日报每天早上发 issue 和 star 的变化，和同步有关的 issue 单独标出来。
+- **反馈**：Bug 反馈整理把近三个月提到“同步”的反馈按问题归类，周五前交一份清单。
+- **发版**：功能做完以后，发版助理照「发版说明整理」那套流程写 Release 说明，贴出去之前先给你看。
+
+开发还是你来，我每周一汇总一次进度。这样安排可以吗？`,
+    agree: '可以',
+    handingOut: '好，我把三件事派下去，先从反馈清单开始。',
+    feedbackStarted: '反馈清单已经交给 Bug 反馈整理在后台做了，做完会把结论发回这里；数据日报明早 9 点发第一份。',
+    allSet: `三件事都安排好了：
+
+- 反馈清单：后台任务在跑，结果会存到资料库的 \`feedback/同步相关反馈清单.md\`
+- 数据日报：每天 9:00，第一份明早到
+- 进度汇总：每周一上午，我来写
+
+同步方案的草稿放在 \`sync/同步方案草稿.md\`，有空可以先看看。`,
+    askIdeaBot: '再帮我建一个 Bot，专门记我随手想到的产品点子，先记下来，不用马上做。',
+    willCreate: '我来建一个「点子收集箱」，只负责记录和归类，不会自己动手去做。',
+    created: '已创建 [点子收集箱](bot:ideas)。想到什么直接发给它，它会记下来、打上标签，默认标成“还没做”。',
+  },
+  lastReplies: {
+    secretary: '你好，我是秘书Bot。有什么需要我处理的？',
+    repo: '昨天新增 38 个 star，还有 2 个和同步有关的新 issue，已经标出来了。',
+    support: '这周的 23 条反馈分好类了，提得最多的是同步慢，一共 9 条。',
+    travel: '京都五天的行程排好了，第三天下午留了空，想逛就逛，累了就回酒店歇着。',
+    fitness: '这周练了三次，周四练腿时深蹲可以加到 50 公斤。',
+    ledger: '这个月家里花了 8,460 元，比上个月少 6%，超出预算的是外卖。',
+    ideas: '记下了：P-0001「离线时先存在本地，联网后再同步」，标成还没做。',
+  },
+  release: {
+    askNotes: 'v0.8 的发版说明帮我整理一下：按新功能、修复、其他分，别直接抄 PR 标题。',
+    notesDone: '整理好了，草稿在资料库 `release/v0.8.md`，一共 12 个 PR：新功能 4、修复 6、其他 2。',
+    keepDoing: '可以。以后都这么弄，贴 Release 之前先给我看一眼。',
+    flowSaved:
+      '存好了：[发版说明整理](flow:release-notes)，4 步。下次发版前说一声，我照着做，贴 Release 之前先给你看。',
+  },
+  chats: {
+    askProgress: '最新进展怎么样？',
+  },
+  releaseNotesFlow: {
+    name: '发版说明整理',
+    when: '准备发版、要写 Release 说明时',
+    listPrs: '列出上个 tag 以来合并的 PR',
+    groupPrs: '按新功能、修复、其他分组',
+    rewrite: '每条改写成用户看得懂的话，不照抄 PR 标题',
+    confirmFirst: '草稿先发给你确认，确认了再贴到 Release',
+    note: '贴到 Release 之前一定先给你看',
+  },
+  preMergeFlow: {
+    name: 'PR 合并前检查',
+    when: '你发来一个 PR 链接，问“能合吗”',
+    checkCi: '看 CI 是不是全绿，没绿就先报哪一项挂了',
+    readDiff: '读 diff，找破坏性改动和漏掉的测试',
+    checkCommits: '对照 CONTRIBUTING 检查提交信息格式',
+    verdict: '给结论：能合，或者列出要改的点',
+    note: '只给结论和理由，不替你点合并',
+  },
+  learnedFlow: {
+    name: '周报汇总',
+    when: '每周五下班前，或你说“写周报”',
+    gather: '翻这周的聊天和任务结论，列出做完的事',
+    group: '按项目归类，每类一两句',
+    nextWeek: '下周要做的单独列一段',
+    note: '不超过 15 行',
+  },
+  routines: {
+    fridayRelease: '周五发版说明',
+    githubDaily: 'GitHub 日报',
+    aiBriefing: 'AI 编程与开源动态简报',
+    githubStats: '每日 GitHub 数据',
+    opsReport: '每日运营日报',
+    feedbackDigest: '每日反馈汇总',
+    workoutReview: '每晚训练复盘',
+  },
+  tasks: {
+    pr491: 'PR #491 能不能合',
+    pr491Status: '第 2/4 步：读 diff',
+    pr487: 'PR #487 能不能合',
+    bugDigest: '整理本周 Bug 反馈',
+    bugDigestFailure: '连不上 GitHub：等了 30 秒没响应',
+    syncPlan: '写同步方案草稿',
+    syncPlanStatus: '对比三种冲突处理办法',
+    weeklyReport: '本周进度汇总',
+    invoiceCheck: '核对报销发票',
+  },
+  library: {
+    export: 'exports/nengyongbot-export-小满.json',
+    syncPlan: 'sync/同步方案草稿.md',
+    feedback: 'feedback/同步相关反馈清单.md',
+    settingsShot: 'screenshots/同步设置页截图.png',
+    conflictShot: 'screenshots/同步冲突截图.png',
+  },
+  bridge: {
+    autoReply: '收到，已记录。需要动手的时候，我先跟你确认。',
+    learnWord: '存成流程',
+    miniAppReply: '收到，我按小程序里的这一下接着做。',
+    webOnly: '网页版不能做这件事，请在桌面应用（npm run app）中操作',
+    noMiniApp: (id: string) => `没有 id 为 ${id} 的小程序`,
+    pageMissing: '<p>这一版的页面不见了</p>',
+    flowSaved: (mention: string, steps: number) => `存好了：${mention}，${steps} 步。下次说一声，我就照着做。`,
+    restored: (version: number) => `恢复成 v${version} 的样子`,
+    noDataDir: '（网页版不保存数据）',
+    greeting: (boss: string, team: string[]) =>
+      `你好，我是${boss}。${team.length ? `先帮你招了 ${team.join('、')}。` : ''}`,
+  },
+  debugTools: {
+    remember: '记住一条长期有用的信息。scope=user：关于用户本人、所有 Bot 共享；scope=bot：只和你的职责有关。',
+    forget: '删除一条记忆（用记忆前面方括号里的 id）。',
+    updateMyInstructions: '改写你自己的职责说明（完整替换）。',
+    updateMyName: '改你自己在侧边栏里显示的名字。',
+    createBot: '新建一个 Bot，它会出现在用户的侧边栏里。',
+    createRoutine: '新建一个例行任务，显示在用户面板的「近况」里。',
+    startTask: '开一个后台任务：它带着职责和记忆、用读写文件和上网的工具独立做完。',
+  },
+  debugPrompt: {
+    intro: '你是这个 Bot，用户的一个助手。现在是演示时间。',
+    jobHeading: '你的职责',
+    job: '跟进开源项目的数据，每天汇报一次。',
+    userHeading: '关于用户（所有 Bot 共享）',
+    userFacts: '- [u1] 回复要短，先给结论',
+    memoryHeading: '你的记忆',
+    memories: '- [m1] 周报每周五 18:00 前交',
+    workHeading: '工作方式',
+    workRules: '- 你在聊天里负责对话和分派……',
+  },
+  debugTrace: {
+    title: '聊天',
+    input: (text: string) => `用户：${text}`,
+    searchQuery: '{"query":"同步 反馈"}',
+    reply: '收到，已记录。',
+  },
+}

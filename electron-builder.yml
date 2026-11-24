@@ -1,0 +1,38 @@
+appId: com.nengyongbot.app
+productName: Nengyong Bot
+afterPack: scripts/afterPack.cjs
+directories:
+  output: release
+files:
+  - dist/**
+  - dist-electron/**
+  - build/tray*.png # the tray icon, read at runtime; the rest of build/ only feeds the installers
+  - package.json
+  - THIRD_PARTY_NOTICES.md # MIT notice for the bundled LiteLLM model catalog
+  - "!node_modules/**"
+mac:
+  category: public.app-category.productivity
+  icon: build/icon.icns
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip # electron-updater installs macOS updates from the zip
+      arch: [arm64, x64]
+  artifactName: Nengyong-Bot-${version}-${arch}.${ext}
+win:
+  icon: build/icon-1024.png
+  target:
+    - target: nsis
+      arch: [x64]
+  artifactName: Nengyong-Bot-${version}-Setup.${ext}
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  shortcutName: Nengyong Bot
+linux:
+  icon: build/icon-1024.png
+  category: Utility
+  syncDesktopName: true
+  target:
+    - AppImage
+  artifactName: Nengyong-Bot-${version}-${arch}.${ext}

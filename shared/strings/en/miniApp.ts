@@ -1,0 +1,73 @@
+import { plural } from '../../language'
+import type { Strings } from '../../strings'
+
+export const miniApp: Strings['miniApp'] = {
+  card: {
+    open: (name) => `Open mini app ${name}`,
+    label: (version) => `Mini app · v${version}`,
+    nowAt: (version) => `Now v${version}`,
+  },
+  dock: {
+    title: 'Dock',
+    app: (name, version, status) => `${name} v${version}, ${status}`,
+    closeApp: (name) => `Close ${name}`,
+  },
+  sheet: {
+    close: 'Close',
+    cancel: 'Cancel',
+    menu: 'Mini app menu',
+    editInChat: 'Change in chat',
+    versions: 'Versions',
+    restart: 'Reopen',
+    exportHtml: 'Export HTML',
+    delete: 'Delete',
+    about: (version, botName, versions) => `v${version} · made by ${botName} · ${plural(versions, 'version')}`,
+    versionsTitle: 'Versions · tap one to preview',
+    current: 'Current',
+    versionsNote: 'Only changes to the page count; new data put in each day is not a new version.',
+  },
+  window: {
+    saveFailed: (reason) => `Saving failed: ${reason}`,
+    sendFailed: (reason) => `Sending failed: ${reason}`,
+    restoreFailed: (reason) => `Restoring failed: ${reason}`,
+    exportFailed: (reason) => `Exporting failed: ${reason}`,
+    deleteFailed: (reason) => `Deleting failed: ${reason}`,
+    sent: 'Sent to the chat',
+    changing: 'Changing',
+    previewing: (version, date) => `Viewing v${version}, as of ${date}`,
+    restore: 'Restore this version',
+    backTo: (version) => `Back to v${version}`,
+    updatedTo: (version) => `Updated to v${version}`,
+    pageError: (error) => `Error: ${error}`,
+    fixRequest: (name, version, error) => `“${name}” v${version} hit an error: ${error}. Please fix it`,
+    askFix: 'Ask the bot to fix it',
+    dismiss: 'Dismiss',
+    deleteTitle: (name) => `Delete “${name}”?`,
+    deleteBody: 'All its versions and data will be deleted. This cannot be undone.',
+    delete: 'Delete',
+    more: 'More',
+    minimize: 'Minimize to the dock',
+    close: 'Close',
+    madeBy: (botName, version) => `Made by ${botName} · v${version}`,
+  },
+  tab: {
+    makeStarter: 'Make me a mini app: ',
+    intro:
+      'What words and pictures can’t show, the bot makes into a mini app: tap, filter and change it, and its data stays current.',
+    list: 'Mini apps',
+    changing: 'Changing…',
+    updated: (date) => `Updated ${date}`,
+    make: 'Have it make a mini app',
+    makeHint: 'Say what you want to see and how you want to tap it',
+  },
+  viewing: {
+    label: 'Viewing',
+    hint: 'Say “change it” and the bot knows you mean this one',
+  },
+  runStatus: {
+    newVersion: (version) => `New version v${version}, open it to switch`,
+    minimized: (minutes) => `Minimized, pauses in ${plural(minutes, 'minute')}`,
+    paused: (minutes) => `Paused for ${plural(minutes, 'minute')}, open it to carry on`,
+    closed: (minutes) => `Closed, reopen within ${plural(minutes, 'minute')} to carry on`,
+  },
+}

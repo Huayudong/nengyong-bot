@@ -1,0 +1,70 @@
+import type { Strings } from '../../strings'
+
+export const identities: Strings['identities'] = {
+  roles: {
+    dev: {
+      label: 'Developer',
+      tries: ['Help me figure out what this error means', 'Every Monday, sum up the open-source repos I follow'],
+    },
+    pm: {
+      label: 'Product manager',
+      tries: [
+        'Every Monday morning, give me a competitor update',
+        "Turn this week's user feedback into a list of requests",
+      ],
+    },
+    design: {
+      label: 'Designer',
+      tries: ['Find me 3 designs worth a look every day', 'Make the copy on these buttons sound more casual'],
+    },
+    qa: {
+      label: 'QA',
+      tries: ['Write test cases for this spec', 'Sum up testing progress before the end of every day'],
+    },
+    ops: {
+      label: 'Marketing',
+      tries: ['Give me 3 content ideas at 9 every morning', 'Write a post announcing a new feature'],
+    },
+    data: {
+      label: 'Data analyst',
+      tries: ['Report the key metrics every morning', 'Write me a SQL query: new users for each day of last week'],
+    },
+  },
+  hires: {
+    'dev-review': { name: 'Code reviewer', duty: 'Reviews PRs for bugs and code smells' },
+    'dev-research': { name: 'Tech researcher', duty: 'Reads docs, compares options, writes up a verdict' },
+    'dev-debug': { name: 'Error debugger', duty: 'Reads logs and errors, suggests where to look' },
+    'dev-release': { name: 'Release writer', duty: 'Writes the release notes for every release' },
+    'dev-oss': { name: 'Repo watcher', duty: 'Weekly recap of the repos you follow' },
+    'pm-competitor': { name: 'Competitor scout', duty: 'Sums up competitor news every Monday' },
+    'pm-feedback': { name: 'Request organizer', duty: 'Groups scattered feedback into a list of requests' },
+    'pm-prd': { name: 'PRD assistant', duty: 'Turns ideas into clear requirement docs' },
+    'pm-interview': { name: 'Interview scribe', duty: 'Summarizes user interviews and pulls out pain points' },
+    'pm-metrics': { name: 'Weekly metrics', duty: 'Reports how the key metrics moved, every Monday' },
+    'design-inspiration': { name: 'Moodboard keeper', duty: 'Finds a few designs worth a look every day' },
+    'design-review': { name: 'Design reviewer', duty: 'Checks screens against the design system' },
+    'design-copy': { name: 'Copy editor', duty: 'Polishes button, hint and empty-state copy' },
+    'design-watch': { name: 'Redesign watcher', duty: 'Tracks competitor redesigns, before and after' },
+    'design-assets': { name: 'Asset keeper', duty: 'Files icons and images in the library' },
+    'qa-cases': { name: 'Test case writer', duty: 'Writes test cases from the spec' },
+    'qa-regression': { name: 'Regression guard', duty: 'Lists what to retest before each release' },
+    'qa-bugs': { name: 'Bug reporter', duty: 'Writes bugs up as reproducible reports' },
+    'qa-daily': { name: 'Daily QA reporter', duty: 'Sums up progress and open issues every day' },
+    'qa-edge': { name: 'Edge-case hunter', duty: 'Hunts for edge cases and odd inputs' },
+    'ops-topics': { name: 'Topic scout', duty: 'Brings 3 content ideas every morning' },
+    'ops-trends': { name: 'Trend watcher', duty: 'Watches trends and comments, flags the ones to answer' },
+    'ops-writer': { name: 'Copywriter', duty: 'Writes posts and campaign copy in your voice' },
+    'ops-review': { name: 'Campaign recap', duty: 'Numbers and lessons after each campaign' },
+    'ops-users': { name: 'User follow-up', duty: 'Sorts user feedback, flags who needs a reply' },
+    'data-daily': { name: 'Daily metrics', duty: 'Reports the key metrics every morning' },
+    'data-anomaly': { name: 'Anomaly hunter', duty: 'Finds out why a metric moved unexpectedly' },
+    'data-sql': { name: 'SQL assistant', duty: 'Turns questions into SQL' },
+    'data-report': { name: 'Report writer', duty: 'Writes analysis findings up as reports' },
+    'data-industry': { name: 'Industry analyst', duty: 'Collects industry data and reports' },
+    'demo-analyst': { name: 'Analyst', duty: 'Watches competitors' },
+    'demo-secretary': { name: 'Secretary', duty: 'Writes up meeting notes' },
+    'demo-researcher': { name: 'Researcher', duty: 'Looks things up and writes reports' },
+  },
+  askWhatYouDo: 'What can you do?',
+  dailyBriefing: 'Give me a daily briefing at 8 every morning',
+}

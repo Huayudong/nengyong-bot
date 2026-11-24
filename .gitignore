@@ -1,0 +1,23 @@
+# dependencies and build output
+node_modules
+dist
+dist-electron
+release
+*.tsbuildinfo
+coverage
+
+# secrets
+.env*
+
+# state of the tools and the OS on one machine
+.ccgui
+.claude/settings.local.json
+.DS_Store
+*.log
+
+# design drafts, kept local
+design/
+
+# README illustration sources that docs/illustrations/_scene.mjs and _pages.mjs regenerate
+docs/illustrations/shots/
+docs/illustrations/*.html

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <mask id="eyes">
+      <rect width="16" height="16" fill="#fff" />
+      <circle cx="5" cy="10.6" r="2.3" fill="#000" />
+      <circle cx="11" cy="10.6" r="2.3" fill="#000" />
+      <circle cx="6.3" cy="10.8" r="1.5" fill="#fff" />
+      <circle cx="12.3" cy="10.8" r="1.5" fill="#fff" />
+    </mask>
+  </defs>
+  <path d="M4.6 4.9 L4.0 1.7 L6.3 3.2 L8 0.9 L9.7 3.2 L12 1.7 L11.4 4.9 Z" transform="rotate(-8 8 3)" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
+  <rect x="1.5" y="5.9" width="13" height="9.4" rx="3.2" mask="url(#eyes)" />
+</svg>

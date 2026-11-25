@@ -173,6 +173,11 @@ export const settings: Strings['settings'] = {
         unit: 'min',
         hint: 'A task running longer is stopped and ends as failed',
       },
+      commandTimeoutMinutes: {
+        label: 'Command timeout',
+        unit: 'min',
+        hint: 'A command in a task running longer is stopped; the task goes on',
+      },
       taskResultChars: {
         label: 'Conclusion length',
         unit: 'chars',

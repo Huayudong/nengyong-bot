@@ -2,6 +2,7 @@ import { LayoutGroup, motion } from 'motion/react'
 import { type ReactNode, useState } from 'react'
 import { z } from 'zod'
 import type { Bot } from '../../shared/bot'
+import type { OutfitId } from '../../shared/outfit'
 import {
   type Entry,
   isUnfinished,
@@ -52,6 +53,8 @@ interface Props {
   onOpenLibraryItem: (path: string) => void
   onRename?: (name: string) => void // absent: shown, not changed
   onPickLook?: (look: Look) => void
+  onPickAvatar?: (avatar: string | undefined) => void
+  onPickOutfit?: (outfit: OutfitId[]) => void
 }
 
 export const PanelTab = z.enum(['feed', 'flows', 'miniApps', 'library']).catch('feed')
@@ -83,6 +86,8 @@ export function BotPanel({
   onOpenLibraryItem,
   onRename,
   onPickLook,
+  onPickAvatar,
+  onPickOutfit,
 }: Props) {
   const content = () => {
     switch (tab) {
@@ -139,6 +144,8 @@ export function BotPanel({
           panel={panel}
           onRename={onRename}
           onPickLook={onPickLook}
+          onPickAvatar={onPickAvatar}
+          onPickOutfit={onPickOutfit}
           onOpenTab={onTab}
           onOpenFlow={onOpenFlow}
         />

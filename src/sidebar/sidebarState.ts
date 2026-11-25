@@ -1,5 +1,6 @@
 import { BOT_NAME_MAX, type Bot, MAIN_BOT, MAIN_BOT_ID, type NewBot } from '../../shared/bot'
 import { SECTION_NAME_MAX, type SidebarState } from '../../shared/sidebar'
+import type { OutfitId } from '../../shared/outfit'
 import { strings } from '../../shared/strings'
 
 export const HIDDEN_NAME = strings().sidebar.sections.hidden
@@ -109,7 +110,21 @@ export const setBotLook = (
   state: SidebarState,
   id: string,
   { shape, color }: Pick<Bot, 'shape' | 'color'>,
-): SidebarState => ({ ...state, bots: state.bots.map((bot) => (bot.id === id ? { ...bot, shape, color } : bot)) })
+): SidebarState => ({
+  ...state,
+  bots: state.bots.map((bot) => (bot.id === id ? { ...bot, shape, color, avatar: undefined } : bot)),
+})
+
+export const setBotOutfit = (state: SidebarState, id: string, outfit: OutfitId[]): SidebarState => ({
+  ...state,
+  bots: state.bots.map((bot) => (bot.id === id ? { ...bot, outfit } : bot)),
+})
+
+/** An uploaded picture takes the place of the look; undefined puts the shape back. */
+export const setBotAvatar = (state: SidebarState, id: string, avatar: string | undefined): SidebarState => ({
+  ...state,
+  bots: state.bots.map((bot) => (bot.id === id ? { ...bot, avatar } : bot)),
+})
 
 /**
  * A new bot lands in its section, or in 其他 if it has none or that section is gone; expanded so it is visible.

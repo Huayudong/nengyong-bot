@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "lib": ["ES2023"],
+    "lib": ["ES2024"],
     "types": ["node", "vite/client"]
   },
   "include": ["harness", "electron", "shared", "vite.config.ts", "vite.electron.config.ts", "conventions.test.ts"]

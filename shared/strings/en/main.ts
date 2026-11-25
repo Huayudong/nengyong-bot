@@ -10,6 +10,11 @@ export const main: Strings['main'] = {
     quit: 'Quit Nengyong Bot',
   },
   cannotOpenData: 'Nengyong Bot cannot open its data',
+  homeInUse: {
+    title: 'Two copies of Nengyong Bot cannot share one home',
+    detail: (home) =>
+      `Another copy is using ${home}. The one that opens second would take the first one's running tasks for interrupted ones, and their results would never come back. Quit the copy that is open; when developing, point NENGYONGBOT_HOME at another home.`,
+  },
   data: {
     missing: (moved, file) =>
       `Cannot find the data folder ${moved}. If it is on an external drive, connect it and open the app again; if you no longer need it, delete ${file} to start over in the default location.`,

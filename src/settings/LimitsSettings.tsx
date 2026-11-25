@@ -14,7 +14,17 @@ type Group = keyof Strings['settings']['limits']['groups']
 
 const GROUPS: { id: Group; keys: (keyof Limits)[] }[] = [
   { id: 'chat', keys: ['chatSteps', 'recentEntries'] },
-  { id: 'tasks', keys: ['taskSteps', 'runningTasks', 'taskTimeoutMinutes', 'taskResultChars', 'endedTasksShown'] },
+  {
+    id: 'tasks',
+    keys: [
+      'taskSteps',
+      'runningTasks',
+      'taskTimeoutMinutes',
+      'commandTimeoutMinutes',
+      'taskResultChars',
+      'endedTasksShown',
+    ],
+  },
   {
     id: 'reading',
     keys: ['readWindowChars', 'searchPreviewChars', 'fileMegabytes', 'webMegabytes', 'webTimeoutSeconds'],

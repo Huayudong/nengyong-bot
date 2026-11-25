@@ -13,6 +13,8 @@ npm run format  # 按 Biome 的规则格式化并修掉能自动修的 lint
 NENGYONGBOT_HOME=/tmp/nengyongbot-dev npm run app  # 换一个应用目录，开发数据不和日常数据混在一起
 ```
 
+一个应用目录同时只让一个实例打开。装好的应用和开发的应用各有各的 profile，Electron 的单实例锁看不见对方；再开一个会直接提示并退出（`electron/homeLock.ts`），否则后开的会把前一个正在跑的任务当成中断，结论也交不回来。
+
 ## 技术选型
 
 | 用途 | 选型 |
@@ -135,7 +137,9 @@ src/        渲染进程（React）。只 import shared。
   | queued | Bot 正在跑一轮时用户发来的消息：先显示成排队，这一轮结束后，下一轮把它们一起读进去、只回一次；开始读时才落盘 |
   | badge | 工牌：面板顶上挂在绳上的 Bot 卡片（`BotBadge`）。卡头是段位的颜色（Lv.60 起扫光，满级转彩虹），印着 Bot 自己的外形；卡上写着入职第几天（新建的 Bot 从 id 里的创建时间算，内置的从第一条 Entry 算）、对话次数、流程数和工号（id 末 4 位，内置的用整个 id）。点条形码「刷卡」翻到背面的 desk，每次打开都从正面开始 |
   | desk | 工位：工牌的背面（`BotDesk`，插画在 `src/bot/desk/`）。Bot 坐在桌前，在做什么由 `deskState.ts` 算：回复、跑任务、任务失败时在干活，没活时摸鱼（刷短剧、打游戏、望窗外、打盹，10 分钟换一种，按 Bot id 错开）。书架上一本文件夹是一个 flow，便利贴是 Routine，纸堆是 library，绿植随入职天数长大，家具随段位升级，窗外和钟按 timezone 走。摆件能点，跳到面板对应的页签；戳 Bot 它会说一句，摸鱼时被戳会把屏幕切成报表 |
-  | look | Bot 的外形：`shape` + `color`。创建对话框和面板头像编辑器里用 `LookPicker` 挑 |
+  | look | Bot 的外形：`shape` + `color`。创建对话框和面板头像编辑器里用 `LookPicker` 挑；Bot 有 avatar 时不画它 |
+  | avatar | Bot 上传的图片头像：`Bot.avatar` 里一段 256×256 的 WebP data URL，有它时各处头像画这张图。面板头像编辑器「上传」页拖拽、粘贴或选本地图片，在圆形取景框里拖动缩放，存下来就换掉原来的外形；再挑一次外形或「移除图片」就回到 look |
+  | outfit | 装扮：Bot 戴在 look 上的饰品（`shared/outfit.ts`），头饰、眼镜、胸前各戴一件（`Bot.outfit`）。按 trust 的段位解锁：每件的解锁等级都是某个段位的起点，Lv.1 有入门款，铜冠 Lv.10、银冠 Lv.30、金冠 Lv.60，往上到满级的彩虹冠；主 Bot 一开始就戴着金冠，摘了随时能戴回去。面板头像编辑器「装扮」页里戴、摘，点了就生效；没解锁的点了只说还差几级，不戴上。只在戴上那一刻看等级，等级掉了不收回。有 avatar 时不画。跨段位升级时升级卡片列出这一级解锁的装扮 |
   | attachment | 用户随消息发的文件：存进资料库的 `uploads/`，Entry 里记它的路径；png/jpg/gif/webp 同时作为图片发给模型 |
   | island | 聊天顶部的黑色胶囊（`src/island/`）：平时是 Bot 和它的等级，有后台任务时显示任务，来了 notice 就变形显示，点开是详情卡。这一轮回复的进度不上岛，留在消息下面；调试模式例外：平时多一段上下文用量，回复时显示第几步，点开是 `DebugCard` |
   | trust | 信任：由一个 Bot 的聊天记录算出的经验（`trustOf`；对话、沉淀新流程、按流程把任务做成各加不同的经验，界面上叫「经验」），决定它的等级 Lv.1–99、头像外圈的进度和段位；点开灵动岛后点等级徽章，卡片翻到等级说明（`LevelGuide`） |
@@ -272,7 +276,7 @@ src/        渲染进程（React）。只 import shared。
 - **点下去，结果要看得见。** 结果自己就在眼前的（开关翻过来、列表变了、窗口开了）不用另说；结果不在眼前的（复制、自动保存、存到别处），就在用户点的地方说一句，过两秒自己消失：用 `ui/useFlash`，比如按钮文字换成「已保存」。失败一定要说出来，不能只进 console。复制只走 `ui/useCopy`，菜单项写 `copy: 文本`，两者都会在原地显示「已复制」或「复制失败」（`conventions.test.ts` 会拦）。
 - **重复的样式抽成组件，不导出 class 字符串常量。** 要的是 `<IconButton>`，不是 `circleBtn`。
 - class 串写在一行，不在模板字符串里换行。
-- 头像、desk（`src/bot/desk/`）和模型厂商的标志（`ModelLogo.tsx`）的图形和配色是插画内容，不受 token 约束。
+- 头像和它的装扮（`OutfitPiece.tsx`）、desk（`src/bot/desk/`）和模型厂商的标志（`ModelLogo.tsx`）的图形和配色是插画内容，不受 token 约束。
 
 ## 动画
 
@@ -323,6 +327,7 @@ src/        渲染进程（React）。只 import shared。
 ## 提交
 
 - **绝不自动 commit。** 改完停在工作区；只有用户明确要求「提交」时才执行 `git commit`。不要顺手提交，也不要替用户决定提交时机。
+- **commit message 只用英文。** 前缀照常用 `feat` / `fix` / `refactor` / `docs` / `chore`，后面一句英文描述，例如 `feat: upload an image as a bot avatar`。不写中文；此前的历史提交不改。
 
 ## 交付前
 

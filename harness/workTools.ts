@@ -70,10 +70,10 @@ export function workTools({ workspace, apiKey, limits, onStatus }: WorkContext) 
       execute: async ({ path, oldText, newText }) => ({ edited: workspace.edit(path, oldText, newText, limits) }),
     }),
     run_command: tool({
-      description: `在用户电脑上执行一条命令（由 ${process.platform === 'win32' ? 'Windows 的 cmd.exe' : '/bin/sh'} 执行），工作目录是本地资料库，返回它打印的内容。用来打包压缩、转换格式、生成图片、跑脚本这类文件工具做不到的事。不能交互：会等输入的命令要加参数跳过。输出很长时重定向到文件，再用 read_file 读。`,
+      description: `在用户电脑上执行一条命令（由 ${process.platform === 'win32' ? 'Windows 的 cmd.exe' : '/bin/sh'} 执行），工作目录是本地资料库，返回它打印的内容。一条命令最多跑 ${limits.commandTimeoutMinutes} 分钟，超时会被中止。用来打包压缩、转换格式、生成图片、跑脚本这类文件工具做不到的事。不能交互：会等输入的命令要加参数跳过。输出很长时重定向到文件，再用 read_file 读。`,
       inputSchema: z.object({ command: z.string().min(1) }),
       execute: async ({ command }, { abortSignal }) =>
-        runCommand(command, workspace.root, limits.readWindowChars, abortSignal),
+        runCommand(command, workspace.root, limits.readWindowChars, limits.commandTimeoutMinutes * 60_000, abortSignal),
     }),
   }
 }

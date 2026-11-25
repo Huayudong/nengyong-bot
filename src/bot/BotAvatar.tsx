@@ -1,8 +1,10 @@
 import { motion } from 'motion/react'
 import type { ReactNode } from 'react'
-import { type Bot, MAIN_BOT_ID, type Shape } from '../../shared/bot'
+import { type Bot, type Shape } from '../../shared/bot'
+import { type OutfitSlot, wornOn } from '../../shared/outfit'
 import { EASE_SWIFT } from '../ui/motion'
 import { useBotActivity, type BotActivity } from './botActivity'
+import { OutfitPiece } from './OutfitPiece'
 
 type Eye = {
   rx: number
@@ -13,8 +15,17 @@ type Eye = {
   blushOpacity: number
   blushDy: number
 }
-/** legY: where the legs start; lower bodies with notched bottoms (star, heart) need them to start higher. */
-type Body = { path: string; top: number; eyes: Array<[number, number]>; eye: Eye; legY?: number }
+/** legY: where the legs start; lower bodies with notched bottoms (star, heart) need them to start higher.
+ * hat: where headwear sits (the middle of its base) and how big it is; chest: how high neckwear hangs. */
+export type Body = {
+  path: string
+  top: number
+  eyes: Array<[number, number]>
+  eye: Eye
+  legY?: number
+  hat: [number, number, number]
+  chest: number
+}
 
 const fixed = (value: number) => value.toFixed(1)
 const polar = (r: number, deg: number, cy = 52): [number, number] => {
@@ -75,6 +86,8 @@ const SHAPES: Record<Shape, Body> = {
       [64, 54],
     ],
     eye: LOGO_EYE,
+    hat: [50, 28, 1],
+    chest: 80,
   },
   cloud: {
     path:
@@ -85,46 +98,82 @@ const SHAPES: Record<Shape, Body> = {
     top: 18,
     eyes: pair(64, 11),
     eye: ROUND_EYE,
+    hat: [52, 25, 0.78],
+    chest: 82,
   },
   onigiri: {
     path: 'M38 20 Q50 2 62 20 L88 66 Q100 88 76 88 H24 Q0 88 12 66Z',
     top: 11,
     eyes: pair(64, 10),
     eye: ROUND_EYE,
+    hat: [50, 21, 0.55],
+    chest: 82,
   },
-  sun: { path: starPath(10, 40, 34, 18), top: 13, eyes: pair(52, 10), eye: ROUND_EYE },
-  clover: { path: petalPath(22, 4, 22, 22, 45), top: 14, eyes: pair(50, 9), eye: ROUND_EYE },
+  sun: { path: starPath(10, 40, 34, 18), top: 13, eyes: pair(52, 10), eye: ROUND_EYE, hat: [50, 21, 0.72], chest: 78 },
+  clover: {
+    path: petalPath(22, 4, 22, 22, 45),
+    top: 14,
+    eyes: pair(50, 9),
+    eye: ROUND_EYE,
+    hat: [50, 25, 0.78],
+    chest: 76,
+  },
   cat: {
     path: 'M16 46 L18 14 Q19 7 25 11 L40 26 H60 L75 11 Q81 7 82 14 L84 46 Q86 52 86 58 V70 Q86 88 68 88 H32 Q14 88 14 70 V58 Q14 52 16 46Z',
     top: 10,
     eyes: pair(56, 12),
     eye: ROUND_EYE,
+    hat: [50, 31, 0.55],
+    chest: 82,
   },
   pudding: {
     path: 'M30 22 H70 Q80 22 82 32 L90 76 Q92 88 80 88 H20 Q8 88 10 76 L18 32 Q20 22 30 22Z',
     top: 22,
     eyes: pair(56, 11),
     eye: ROUND_EYE,
+    hat: [50, 29, 0.85],
+    chest: 82,
   },
-  diamond: { path: roundedPolygon(4, 42, 0, 0.28), top: 13, eyes: pair(50, 10), eye: ROUND_EYE, legY: 70 },
+  diamond: {
+    path: roundedPolygon(4, 42, 0, 0.28),
+    top: 13,
+    eyes: pair(50, 10),
+    eye: ROUND_EYE,
+    legY: 70,
+    hat: [50, 20, 0.55],
+    chest: 74,
+  },
   mushroom: {
     path: 'M8 50 Q8 12 50 12 Q92 12 92 50 Q92 58 82 58 H18 Q8 58 8 50Z M30 54 H70 V78 Q70 88 60 88 H40 Q30 88 30 78Z',
     top: 12,
     eyes: pair(40, 12),
     eye: ROUND_EYE,
+    hat: [50, 18, 0.85],
+    chest: 68,
   },
   drop: {
     path: 'M50 12 C58 28 86 46 86 64 C86 80 70 88 50 88 C30 88 14 80 14 64 C14 46 42 28 50 12Z',
     top: 12,
     eyes: pair(62, 11),
     eye: ROUND_EYE,
+    hat: [50, 21, 0.5],
+    chest: 82,
   },
-  octagon: { path: roundedPolygon(8, 40, 22.5, 0.2), top: 15, eyes: pair(52, 11), eye: ROUND_EYE },
+  octagon: {
+    path: roundedPolygon(8, 40, 22.5, 0.2),
+    top: 15,
+    eyes: pair(52, 11),
+    eye: ROUND_EYE,
+    hat: [50, 22, 0.85],
+    chest: 78,
+  },
   bell: {
     path: 'M44 14 a6 6 0 1 1 12 0 a6 6 0 1 1 -12 0Z M50 18 Q74 18 76 44 L80 70 Q82 76 90 80 Q94 82 92 86 Q90 88 84 88 H16 Q10 88 8 86 Q6 82 10 80 Q18 76 20 70 L24 44 Q26 18 50 18Z',
     top: 8,
     eyes: pair(50, 10),
     eye: ROUND_EYE,
+    hat: [50, 12, 0.5],
+    chest: 76,
   },
 }
 
@@ -183,33 +232,6 @@ function motionFor(activity: BotActivity | 'idle', seed: number) {
   }
 }
 
-const CROWN_TIPS: Array<[number, number]> = [
-  [24, 4],
-  [37, 8],
-  [50, -2],
-  [63, 8],
-  [76, 4],
-]
-
-// shortcut: crown sits on 方方's head (top y≈20), the main bot's shape; give each body a head-top y if the main bot can ever change shape.
-function Crown() {
-  return (
-    <g transform="rotate(-8 50 22)">
-      <path
-        d="M27 26 L24 4 L37 16 L37 8 L50 -2 L63 8 L63 16 L76 4 L73 26 Z"
-        fill="#f5c542"
-        stroke="#f5c542"
-        strokeWidth={4}
-        strokeLinejoin="round"
-      />
-      <rect x={25} y={20} width={50} height={8} rx={3} fill="#e0a92a" />
-      {CROWN_TIPS.map(([x, y]) => (
-        <circle key={x} cx={x} cy={y} r={4} fill="#ff6b6b" />
-      ))}
-    </g>
-  )
-}
-
 interface Props {
   bot: Bot
   size: number
@@ -219,10 +241,35 @@ interface Props {
 }
 
 export function BotAvatar({ bot, size, animated = size >= MIN_ANIMATED_SIZE, badge }: Props) {
-  const { path, eyes, eye, legY = 82 } = SHAPES[bot.shape]
+  const body = SHAPES[bot.shape]
+  const { path, eyes, eye, legY = 82 } = body
   const activity = useBotActivity(bot.id)
   const moves = animated ? motionFor(activity, seedOf(bot.id)) : null
   const eyeY = eyes[0][1]
+  const worn = (slot: OutfitSlot) => {
+    const id = wornOn(bot.outfit ?? [], slot)
+    return id && <OutfitPiece id={id} body={body} />
+  }
+
+  if (bot.avatar) {
+    return (
+      <span
+        data-activity={activity}
+        data-avatar-of={bot.id}
+        className="relative inline-flex shrink-0 motion-safe:group-hover:animate-[avatar-hop_.5s_var(--ease-sharp)]"
+      >
+        <img
+          src={bot.avatar}
+          alt=""
+          width={size}
+          height={size}
+          draggable={false}
+          className="rounded-full object-cover"
+        />
+        {badge}
+      </span>
+    )
+  }
 
   return (
     // group-hover hop is driven by the parent row/tile having the `group` class
@@ -253,6 +300,7 @@ export function BotAvatar({ bot, size, animated = size >= MIN_ANIMATED_SIZE, bad
               opacity={eye.blushOpacity}
             />
           ))}
+          {worn('neck')}
           <motion.g animate={moves?.look.animate} transition={moves?.look.transition}>
             <motion.g
               style={{ originX: '50px', originY: `${eyeY}px`, transformBox: 'view-box' }}
@@ -267,7 +315,8 @@ export function BotAvatar({ bot, size, animated = size >= MIN_ANIMATED_SIZE, bad
               ))}
             </motion.g>
           </motion.g>
-          {bot.id === MAIN_BOT_ID && <Crown />}
+          {worn('face')}
+          {worn('head')}
         </motion.g>
       </svg>
       {badge}

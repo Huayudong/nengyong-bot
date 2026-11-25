@@ -2,6 +2,14 @@ import type { Strings } from '../../strings'
 
 export const releases: Strings['releases'] = {
   versions: {
+    '1.0.0-beta.2': {
+      title: 'New avatars, new outfits',
+      others: [
+        'Only one copy of Nengyong Bot can open an app folder at a time. A second one says so and quits, so the background tasks of the first are not taken as interrupted and their results still come back',
+        'One command in a background task runs for at most 5 minutes; past that the command is stopped and the task carries on. In debug mode, change it under Command timeout in Settings · Limits',
+        'Stopping a task from the panel just as it ends no longer shows an error',
+      ],
+    },
     '1.0.0-beta.1': {
       title: 'Open source: the first public beta',
       others: [
@@ -17,6 +25,16 @@ export const releases: Strings['releases'] = {
     },
   },
   highlights: {
+    avatar: {
+      title: 'Upload an avatar: give a bot a picture you choose',
+      text: "Click the avatar on the panel's badge, switch to Upload, then drop in an image, paste one or choose one from your computer. Drag and zoom it inside the round frame and click Save: the sidebar, the chat and the badge all show the new avatar. To go back, pick a shape or click Remove image.",
+      alt: 'On the left, a picture of a puppy adjusted in the round frame; on the right, the badge with the new avatar',
+    },
+    outfit: {
+      title: 'Outfits: the higher the level, the more to wear',
+      text: 'The avatar editor has a new Outfit page: one piece each for the head, the face and the chest, put on with a click. The party hat, round glasses and bow tie are there from the start; sunglasses and the bronze, silver and gold crowns unlock as the bot levels up, all the way to the rainbow crown at the top level. Click a piece that is still locked and it tells you how many levels to go. When a level-up reaches a new rank, the level-up card lists the outfits it unlocked. The main bot starts out wearing the gold crown, and can put it back on any time after taking it off.',
+      alt: 'On the left, the Outfit page putting a party hat, round glasses and a bow tie on a bot, with the locked pieces marked by level; on the right, the badge with the outfit on',
+    },
     flow: {
       title: 'Flows: get it right once, save it, repeat it',
       text: 'Once a bot gets a job right with you, say “do it this way from now on”. With your OK it saves the way it did it as a flow: when to use it, the steps and what to watch out for. Later tasks and routines follow the flow, and a flow name in a reply opens with a click.',

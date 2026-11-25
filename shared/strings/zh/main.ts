@@ -7,6 +7,11 @@ export const main = {
     quit: '退出 Nengyong Bot',
   },
   cannotOpenData: 'Nengyong Bot 无法打开数据',
+  homeInUse: {
+    title: '同一份数据不能用两个 Nengyong Bot 打开',
+    detail: (home: string) =>
+      `另一个 Nengyong Bot 正在用 ${home}。后打开的会把前一个正在跑的后台任务当成中断，它们的结论也交不回来。先退出已经打开的那个；开发时用 NENGYONGBOT_HOME 换一个应用目录。`,
+  },
   data: {
     missing: (moved: string, file: string) =>
       `找不到数据目录 ${moved}。它在移动硬盘上的话，接上后再打开；不要了就删掉 ${file}，会在默认位置从头开始。`,

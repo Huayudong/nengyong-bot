@@ -8,6 +8,8 @@ import miniAppStill from './releases/1.0.0-beta.1/mini-app-still.webp'
 import models from './releases/1.0.0-beta.1/models.webp'
 import phone from './releases/1.0.0-beta.1/phone.webp'
 import status from './releases/1.0.0-beta.1/status.webp'
+import avatar from './releases/1.0.0-beta.2/avatar.webp'
+import outfit from './releases/1.0.0-beta.2/outfit.webp'
 
 export type ReleaseMedia =
   | { kind: 'image'; src: string; alt: string }
@@ -31,6 +33,12 @@ const words = strings().releases
 
 /** Newest first; the first one is the version running now. */
 export const RELEASES: Release[] = [
+  {
+    version: '1.0.0-beta.2',
+    date: '2026-11-25',
+    ...words.versions['1.0.0-beta.2'],
+    highlights: [image(words.highlights.avatar, avatar), image(words.highlights.outfit, outfit)],
+  },
   {
     version: '1.0.0-beta.1',
     date: '2026-11-23',

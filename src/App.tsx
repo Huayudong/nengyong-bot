@@ -32,7 +32,9 @@ import {
   markSeen,
   markUnseenAsSeen,
   renameBot,
+  setBotAvatar,
   setBotLook,
+  setBotOutfit,
   setUnread,
   togglePin,
 } from './sidebar/sidebarState'
@@ -212,6 +214,8 @@ export function App({ bridge, initialSidebar = INITIAL_SIDEBAR, needsOnboarding 
               onStopTask={(taskId) => harness.stopTask(bot.id, taskId)}
               onRename={(name) => setSidebar((state) => renameBot(state, bot.id, name))}
               onPickLook={(look) => setSidebar((state) => setBotLook(state, bot.id, look))}
+              onPickAvatar={(avatar) => setSidebar((state) => setBotAvatar(state, bot.id, avatar))}
+              onPickOutfit={(outfit) => setSidebar((state) => setBotOutfit(state, bot.id, outfit))}
               bots={bots}
             />
           </PanelFrame>

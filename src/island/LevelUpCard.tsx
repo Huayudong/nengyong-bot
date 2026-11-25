@@ -1,5 +1,6 @@
 import { motion } from 'motion/react'
-import { type Bot, PALETTE } from '../../shared/bot'
+import { type Bot, MAIN_BOT_ID, PALETTE } from '../../shared/bot'
+import { isUnlocked, unlockedAt } from '../../shared/outfit'
 import { strings } from '../../shared/strings'
 import { BotAvatar } from '../bot/BotAvatar'
 import { EASE_SHARP } from '../ui/motion'
@@ -21,7 +22,7 @@ const SPARKS = Array.from({ length: SPARK_COUNT }, (_, index) => {
   }
 })
 
-/** The bot reached a new level: confetti, the number rolling over, and what the new level means. */
+/** The bot reached a new level: confetti, the number rolling over, what the new level means and the outfits it unlocked. */
 export function LevelUpCard({ bot, level }: { bot: Bot; level: number }) {
   return (
     <div className="relative flex w-[280px] flex-col items-center px-5 pt-[22px] pb-5 text-center">
@@ -63,7 +64,28 @@ export function LevelUpCard({ bot, level }: { bot: Bot; level: number }) {
         </span>
       </div>
       <div className="mt-3 rounded-md bg-white/10 px-3 py-1.5 text-xs text-white/60">{tierLine(level)}</div>
+      <NewOutfits bot={bot} level={level} />
     </div>
+  )
+}
+
+function NewOutfits({ bot, level }: { bot: Bot; level: number }) {
+  const outfits = unlockedAt(level).filter((id) => !isUnlocked(id, level - 1, bot.id === MAIN_BOT_ID))
+  if (outfits.length === 0) return null
+  return (
+    <section className="mt-3 w-full rounded-lg bg-white/8 px-3 pt-2.5 pb-3">
+      <h4 className="mb-2 text-xs font-semibold text-white/60">{strings().island.levelUp.newOutfits}</h4>
+      <ul className="flex justify-center gap-3.5">
+        {outfits.map((id) => (
+          <li key={id} className="flex flex-col items-center gap-1 text-xs text-white/80">
+            <span className="grid size-12 place-items-center rounded-full bg-white">
+              <BotAvatar bot={{ ...bot, avatar: undefined, outfit: [id] }} size={36} animated={false} />
+            </span>
+            {strings().bot.outfit.items[id]}
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 

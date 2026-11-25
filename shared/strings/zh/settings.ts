@@ -167,6 +167,11 @@ export const settings = {
         unit: '分钟',
         hint: '运行超过这么久就中止，按失败结束',
       },
+      commandTimeoutMinutes: {
+        label: '命令超时',
+        unit: '分钟',
+        hint: '任务里的一条命令跑超过这么久就中止，任务接着做',
+      },
       taskResultChars: {
         label: '结论长度',
         unit: '字',

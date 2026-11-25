@@ -33,9 +33,9 @@ it('keeps imports pointing one way between the top-level directories', () => {
 // AGENTS.md「样式」: colours, font sizes, radii and shadows come from @theme in src/index.css
 it('keeps arbitrary colours, font sizes, radii and shadows out of the components', () => {
   const violations = sourceFiles('src')
-    // the avatar, the desk on the back of the badge and the makers' marks are illustration; tests hold bot colours as data
+    // the avatar and its outfit, the desk on the back of the badge and the makers' marks are illustration; tests hold bot colours as data
     .filter((file) => file.endsWith('.tsx') && !file.endsWith('.test.tsx'))
-    .filter((file) => !file.endsWith('BotAvatar.tsx') && !file.endsWith('ModelLogo.tsx'))
+    .filter((file) => !['BotAvatar.tsx', 'OutfitPiece.tsx', 'ModelLogo.tsx'].some((name) => file.endsWith(name)))
     .filter((file) => !file.startsWith(path.join('src', 'bot', 'desk', '')))
     .flatMap((file) =>
       [...fs.readFileSync(file, 'utf8').matchAll(/#[0-9a-fA-F]{3,8}\b|\b(?:text|rounded|shadow)-\[[^\]]+\]/g)].map(

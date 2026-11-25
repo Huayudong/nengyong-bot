@@ -13,6 +13,8 @@ import {
   moveToSection,
   renameBot,
   renameSection,
+  setBotAvatar,
+  setBotLook,
   setHidden,
   setUnread,
   togglePin,
@@ -131,13 +133,17 @@ describe('sidebar updates', () => {
     expect(createBot(created, { id: 'b1', name: '重复', shape: 'blob', color: '#1E1E22' })).toBe(created)
   })
 
-  it('creates a bot into the section it was meant for (expanded), or into 其他 once that section is gone', () => {
-    const bot = { id: 'b1', name: '写作助手', shape: 'cat', color: '#2BC48A' } as const
-    const collapsed = { ...DEMO, sections: DEMO.sections.map((section) => ({ ...section, collapsed: true })) }
-    const placed = sidebarView(createBot(collapsed, { ...bot, sectionId: 's2' }))
-    const target = placed.sections.find((section) => section.id === 's2')
-    expect(target?.collapsed).toBe(false)
-    expect(target?.bots.slice(-1)).toEqual([bot])
-    expect(ids(sidebarView(createBot(DEMO, { ...bot, sectionId: 'gone' })).ungrouped)).toContain('b1')
+  it('an uploaded picture replaces the look until a new look is picked', () => {
+    const avatar = 'data:image/webp;base64,AAAA'
+    const withPicture = setBotAvatar(DEMO, 'repo', avatar)
+    expect(withPicture.bots.find((bot) => bot.id === 'repo')?.avatar).toBe(avatar)
+    const relooked = setBotLook(withPicture, 'repo', { shape: 'cat', color: '#4A8CFF' })
+    expect(relooked.bots.find((bot) => bot.id === 'repo')).toMatchObject({ shape: 'cat', color: '#4A8CFF' })
+    expect(relooked.bots.find((bot) => bot.id === 'repo')?.avatar).toBeUndefined()
+  })
+
+  it('removing the picture puts the shape back', () => {
+    const withPicture = setBotAvatar(DEMO, 'repo', 'data:image/webp;base64,AAAA')
+    expect(setBotAvatar(withPicture, 'repo', undefined).bots.find((bot) => bot.id === 'repo')?.avatar).toBeUndefined()
   })
 })

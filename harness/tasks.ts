@@ -196,11 +196,13 @@ export function createTaskRunner(options: TaskRunnerOptions) {
 
   function stop(taskId: string) {
     const task = store.task(taskId)
-    if (!task || !isUnfinished(task)) throw new Error(strings().harness.noRunningTask(taskId))
-    store.saveTask({ ...task, status: 'stopped', endedAt: Date.now() })
+    if (!task) throw new Error(strings().harness.noRunningTask(taskId))
+    if (isUnfinished(task)) {
+      store.saveTask({ ...task, status: 'stopped', endedAt: Date.now() })
+      waiting = waiting.filter((id) => id !== taskId)
+      running.get(taskId)?.abort()
+    }
     publish(task.botId)
-    waiting = waiting.filter((id) => id !== taskId)
-    running.get(taskId)?.abort()
   }
 
   return { start, startRoutine, stop, startWaiting }

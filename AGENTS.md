@@ -324,6 +324,7 @@ src/        渲染进程（React）。只 import shared。
 ## 提交
 
 - **绝不自动 commit。** 改完停在工作区；只有用户明确要求「提交」时才执行 `git commit`。不要顺手提交，也不要替用户决定提交时机。
+- **commit message 只用英文。** 前缀照常用 `feat` / `fix` / `refactor` / `docs` / `chore`，后面一句英文描述，例如 `feat: upload an image as a bot avatar`。不写中文；此前的历史提交不改。
 
 ## 交付前
 

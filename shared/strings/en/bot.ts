@@ -6,6 +6,28 @@ export const bot: Strings['bot'] = {
   avatar: {
     change: 'Change avatar',
     changeLook: 'Change the look',
+    source: 'Avatar',
+    tabs: {
+      look: 'Bot',
+      upload: 'Upload',
+    },
+    drop: 'Drop or paste an image',
+    or: 'or',
+    choose: 'Choose an image',
+    crop: 'Drag to move the avatar',
+    zoom: 'Zoom',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    recenter: 'Recenter',
+    cancel: 'Cancel',
+    save: 'Save',
+    remove: 'Remove image',
+    errors: {
+      notImage: 'Choose an image file',
+      tooLarge: (megabytes) => `Images must be under ${megabytes} MB`,
+      unreadable: 'This image cannot be opened; try another one',
+      saveFailed: 'Could not save the image; try again',
+    },
   },
   look: {
     shape: 'Shape',

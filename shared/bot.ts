@@ -41,7 +41,14 @@ export const BotId = z.string().regex(new RegExp(`^${BOT_ID_PATTERN}$`))
 export const Shape = z.enum(PICKER_SHAPES)
 export type Shape = z.infer<typeof Shape>
 
-/** A bot as the sidebar shows it. Parsing truncates an over-long name instead of rejecting the bot. */
+const AVATAR_MAX_CHARS = 500_000
+const avatarDataUrl = z
+  .string()
+  .max(AVATAR_MAX_CHARS)
+  .regex(/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/)
+
+/** A bot as the sidebar shows it. Parsing truncates an over-long name instead of rejecting the bot.
+ * An uploaded picture (`avatar`) is drawn in place of the shape and colour. */
 export const Bot = z.object({
   id: BotId,
   name: z
@@ -51,6 +58,7 @@ export const Bot = z.object({
     .transform((name) => name.slice(0, BOT_NAME_MAX)),
   shape: Shape,
   color: z.string().refine((value) => PALETTE.some((color) => color.value === value)),
+  avatar: avatarDataUrl.optional(),
 })
 export type Bot = z.infer<typeof Bot>
 
@@ -58,8 +66,13 @@ export type Bot = z.infer<typeof Bot>
 export const NewBot = Bot.extend({ sectionId: z.string().optional() })
 export type NewBot = z.infer<typeof NewBot>
 
-/** A saved bot keeps its place even when its look is no longer offered: it gets the closest colour and a shape of its own. */
-export const StoredBot = Bot.extend({ shape: z.string(), color: z.string() }).transform(
+/** A saved bot keeps its place even when its look is no longer offered: it gets the closest colour and a shape of its own.
+ * A picture it cannot draw is dropped, and the shape shows instead. */
+export const StoredBot = Bot.extend({
+  shape: z.string(),
+  color: z.string(),
+  avatar: avatarDataUrl.optional().catch(undefined),
+}).transform(
   (bot): Bot => ({
     ...bot,
     shape: Shape.safeParse(bot.shape).data ?? fallbackShape(bot.id),

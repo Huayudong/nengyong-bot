@@ -224,6 +224,26 @@ export function BotAvatar({ bot, size, animated = size >= MIN_ANIMATED_SIZE, bad
   const moves = animated ? motionFor(activity, seedOf(bot.id)) : null
   const eyeY = eyes[0][1]
 
+  if (bot.avatar) {
+    return (
+      <span
+        data-activity={activity}
+        data-avatar-of={bot.id}
+        className="relative inline-flex shrink-0 motion-safe:group-hover:animate-[avatar-hop_.5s_var(--ease-sharp)]"
+      >
+        <img
+          src={bot.avatar}
+          alt=""
+          width={size}
+          height={size}
+          draggable={false}
+          className="rounded-full object-cover"
+        />
+        {badge}
+      </span>
+    )
+  }
+
   return (
     // group-hover hop is driven by the parent row/tile having the `group` class
     <span

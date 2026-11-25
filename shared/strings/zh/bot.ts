@@ -3,6 +3,28 @@ export const bot = {
   avatar: {
     change: '换头像',
     changeLook: '换个样子',
+    source: '头像',
+    tabs: {
+      look: 'Bot',
+      upload: '上传',
+    },
+    drop: '拖拽或粘贴图片',
+    or: '或',
+    choose: '选择本地图片',
+    crop: '拖动调整头像位置',
+    zoom: '缩放',
+    zoomIn: '放大',
+    zoomOut: '缩小',
+    recenter: '重新居中',
+    cancel: '取消',
+    save: '保存',
+    remove: '移除图片',
+    errors: {
+      notImage: '只能选择图片',
+      tooLarge: (megabytes: number) => `图片不能超过 ${megabytes} MB`,
+      unreadable: '这张图片打不开，换一张试试',
+      saveFailed: '没能保存这张图片，再试一次',
+    },
   },
   look: {
     shape: '外形',

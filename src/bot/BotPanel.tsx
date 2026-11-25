@@ -52,6 +52,7 @@ interface Props {
   onOpenLibraryItem: (path: string) => void
   onRename?: (name: string) => void // absent: shown, not changed
   onPickLook?: (look: Look) => void
+  onPickAvatar?: (avatar: string | undefined) => void
 }
 
 export const PanelTab = z.enum(['feed', 'flows', 'miniApps', 'library']).catch('feed')
@@ -83,6 +84,7 @@ export function BotPanel({
   onOpenLibraryItem,
   onRename,
   onPickLook,
+  onPickAvatar,
 }: Props) {
   const content = () => {
     switch (tab) {
@@ -139,6 +141,7 @@ export function BotPanel({
           panel={panel}
           onRename={onRename}
           onPickLook={onPickLook}
+          onPickAvatar={onPickAvatar}
           onOpenTab={onTab}
           onOpenFlow={onOpenFlow}
         />

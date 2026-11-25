@@ -34,13 +34,14 @@ interface Props {
   // absent on a paired device: the computer keeps the sidebar, so the name and the look are shown, not changed
   onRename?: (name: string) => void
   onPickLook?: (look: Look) => void
+  onPickAvatar?: (avatar: string | undefined) => void
   onOpenTab: (tab: PanelTab) => void
   onOpenFlow: (flowId: string | null) => void
 }
 
 /** The top of the panel: the bot's staff badge on a lanyard, its band in the colour of the tier. It swings in and leans after
  * the pointer; swiping its barcode turns it over to the bot's desk, and it always starts on its front. */
-export function BotBadge({ bot, entries, panel, onRename, onPickLook, onOpenTab, onOpenFlow }: Props) {
+export function BotBadge({ bot, entries, panel, onRename, onPickLook, onPickAvatar, onOpenTab, onOpenFlow }: Props) {
   const words = strings().bot.badge
   const trust = useMemo(() => trustOf(entries), [entries])
   const now = useNow(ELAPSED_REFRESH_MS)
@@ -98,7 +99,11 @@ export function BotBadge({ bot, entries, panel, onRename, onPickLook, onOpenTab,
             <Band shape={bot.shape} level={trust.level} />
             <div className="relative mx-auto -mt-12 w-fit rounded-full bg-surface p-1">
               <TrustRing trust={trust} size={88}>
-                {onPickLook ? <AvatarEditor bot={bot} onPick={onPickLook} /> : <BotAvatar bot={bot} size={64} />}
+                {onPickLook && onPickAvatar ? (
+                  <AvatarEditor bot={bot} onPick={onPickLook} onPickAvatar={onPickAvatar} />
+                ) : (
+                  <BotAvatar bot={bot} size={64} />
+                )}
               </TrustRing>
             </div>
             {onRename ? (

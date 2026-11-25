@@ -1003,6 +1003,25 @@ describe('background tasks', () => {
     expect(chatCalls(model)).toHaveLength(4)
   })
 
+  it('shows a task that already ended as ended when stopped from the panel', async () => {
+    const model = scriptedModel({
+      chat: [now(undefined, [startTask('调研')]), now('开了。')],
+      task: [now('好了')],
+    })
+    const { store, harness } = setup(model)
+    await harness.send('chief', '调研一下')
+    await reported(store)
+    const [task] = store.tasksOf('chief', 10)
+    events.length = 0
+    harness.stopTask('chief', task.id)
+    expect(store.task(task.id)?.status).toBe('done')
+    expect(events).toContainEqual({
+      kind: 'tasks',
+      botId: 'chief',
+      tasks: [expect.objectContaining({ id: task.id, status: 'done' })],
+    })
+  })
+
   it('refuses to stop a task that is not running', async () => {
     const model = scriptedModel({
       chat: [now(undefined, [{ name: 'stop_task', input: { taskId: 't-ghost' } }])],

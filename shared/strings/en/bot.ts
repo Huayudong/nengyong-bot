@@ -10,6 +10,7 @@ export const bot: Strings['bot'] = {
     tabs: {
       look: 'Bot',
       upload: 'Upload',
+      outfit: 'Outfit',
     },
     drop: 'Drop or paste an image',
     or: 'or',
@@ -32,6 +33,34 @@ export const bot: Strings['bot'] = {
   look: {
     shape: 'Shape',
     color: 'Color',
+  },
+  outfit: {
+    slots: {
+      head: 'Hat',
+      face: 'Glasses',
+      neck: 'Neck',
+    },
+    items: {
+      partyHat: 'Party hat',
+      bronzeCrown: 'Bronze crown',
+      silverCrown: 'Silver crown',
+      goldCrown: 'Gold crown',
+      halo: 'Halo',
+      rainbowCrown: 'Rainbow crown',
+      roundGlasses: 'Round glasses',
+      sunglasses: 'Sunglasses',
+      monocle: 'Monocle',
+      bowTie: 'Bow tie',
+      tie: 'Tie',
+      medal: 'Medal',
+    },
+    takeOff: 'Take off',
+    takeOffFrom: (slot) => `Take off the ${slot.toLowerCase()}`,
+    unlocksAt: (name, level) => `${name}, unlocks at Lv.${level}`,
+    next: (levels, rank, names) => `${plural(levels, 'more level')} to the ${rank} rank unlocks ${names}`,
+    allUnlocked: 'Every outfit is unlocked',
+    needs: (name, level, rank, levels) => `${name} needs Lv.${level} (${rank}): ${plural(levels, 'more level')} to go`,
+    onPicture: 'The uploaded picture is showing, so the outfit waits: pick a Bot look to wear it.',
   },
   badge: {
     onTheJob: 'On the job',

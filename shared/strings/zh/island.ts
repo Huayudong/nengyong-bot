@@ -51,6 +51,7 @@ export const island = {
     upTo: (level: number) => `升到 Lv.${level}`,
     reachedRank: (rank: string) => `进入「${rank}」段位`,
     toRank: (levels: number, rank: string) => `再升 ${levels} 级进入「${rank}」段位`,
+    newOutfits: '解锁新装扮',
   },
   trust: {
     xp: (points: number, needed: number) => `经验 ${points} / ${needed}`,

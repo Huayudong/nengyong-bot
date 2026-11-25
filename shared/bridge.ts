@@ -242,7 +242,9 @@ const MAX_SUGGESTIONS = 3
 export const OnboardingChoices = z.object({
   bossName: Bot.shape.name,
   address: z.string().trim().max(ADDRESS_MAX), // '' when the user gave none
-  hires: z.array(Bot.omit({ id: true }).extend({ duty: z.string().trim().min(1).max(200) })).max(MAX_HIRES),
+  hires: z
+    .array(Bot.omit({ id: true, outfit: true }).extend({ duty: z.string().trim().min(1).max(200) }))
+    .max(MAX_HIRES),
   suggestions: z.array(z.string().trim().min(1).max(100)).max(MAX_SUGGESTIONS),
 })
 export type OnboardingChoices = z.infer<typeof OnboardingChoices>

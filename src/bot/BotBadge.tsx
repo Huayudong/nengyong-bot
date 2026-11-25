@@ -3,6 +3,7 @@ import { type ReactNode, type RefObject, useMemo, useRef, useState } from 'react
 import { flushSync } from 'react-dom'
 import { type Bot, botCreatedAt, type Shape, workNumberOf } from '../../shared/bot'
 import type { Entry, PanelData } from '../../shared/bridge'
+import type { OutfitId } from '../../shared/outfit'
 import { calendarDay, TIMEZONE } from '../../shared/timezone'
 import { levelEffectOf, type Trust, tierOf, trustOf } from '../../shared/trust'
 import { ELAPSED_REFRESH_MS } from '../elapsedLabel'
@@ -35,13 +36,24 @@ interface Props {
   onRename?: (name: string) => void
   onPickLook?: (look: Look) => void
   onPickAvatar?: (avatar: string | undefined) => void
+  onPickOutfit?: (outfit: OutfitId[]) => void
   onOpenTab: (tab: PanelTab) => void
   onOpenFlow: (flowId: string | null) => void
 }
 
 /** The top of the panel: the bot's staff badge on a lanyard, its band in the colour of the tier. It swings in and leans after
  * the pointer; swiping its barcode turns it over to the bot's desk, and it always starts on its front. */
-export function BotBadge({ bot, entries, panel, onRename, onPickLook, onPickAvatar, onOpenTab, onOpenFlow }: Props) {
+export function BotBadge({
+  bot,
+  entries,
+  panel,
+  onRename,
+  onPickLook,
+  onPickAvatar,
+  onPickOutfit,
+  onOpenTab,
+  onOpenFlow,
+}: Props) {
   const words = strings().bot.badge
   const trust = useMemo(() => trustOf(entries), [entries])
   const now = useNow(ELAPSED_REFRESH_MS)
@@ -99,8 +111,14 @@ export function BotBadge({ bot, entries, panel, onRename, onPickLook, onPickAvat
             <Band shape={bot.shape} level={trust.level} />
             <div className="relative mx-auto -mt-12 w-fit rounded-full bg-surface p-1">
               <TrustRing trust={trust} size={88}>
-                {onPickLook && onPickAvatar ? (
-                  <AvatarEditor bot={bot} onPick={onPickLook} onPickAvatar={onPickAvatar} />
+                {onPickLook && onPickAvatar && onPickOutfit ? (
+                  <AvatarEditor
+                    bot={bot}
+                    level={trust.level}
+                    onPick={onPickLook}
+                    onPickAvatar={onPickAvatar}
+                    onPickOutfit={onPickOutfit}
+                  />
                 ) : (
                   <BotAvatar bot={bot} size={64} />
                 )}

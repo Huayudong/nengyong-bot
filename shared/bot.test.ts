@@ -19,3 +19,19 @@ describe('bot avatars', () => {
     expect(Bot.safeParse({ ...MAIN_BOT, avatar: huge }).success).toBe(false)
   })
 })
+
+describe('bot outfits', () => {
+  it('keeps the crown on a main bot saved before outfits existed', () => {
+    const { outfit: _, ...saved } = MAIN_BOT
+    expect(StoredBot.parse(saved).outfit).toEqual(['goldCrown'])
+  })
+
+  it('keeps the main bot bare once its crown was taken off', () => {
+    expect(StoredBot.parse({ ...MAIN_BOT, outfit: [] }).outfit).toEqual([])
+  })
+
+  it('drops a saved piece of outfit that no longer exists and keeps the rest', () => {
+    const stored = StoredBot.parse({ ...MAIN_BOT, id: 'b1', outfit: ['sunglasses', 'jetpack'] })
+    expect(stored.outfit).toEqual(['sunglasses'])
+  })
+})

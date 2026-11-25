@@ -7,6 +7,7 @@ export const bot = {
     tabs: {
       look: 'Bot',
       upload: '上传',
+      outfit: '装扮',
     },
     drop: '拖拽或粘贴图片',
     or: '或',
@@ -29,6 +30,35 @@ export const bot = {
   look: {
     shape: '外形',
     color: '配色',
+  },
+  outfit: {
+    slots: {
+      head: '头饰',
+      face: '眼镜',
+      neck: '胸前',
+    },
+    items: {
+      partyHat: '派对帽',
+      bronzeCrown: '铜冠',
+      silverCrown: '银冠',
+      goldCrown: '金冠',
+      halo: '光环',
+      rainbowCrown: '彩虹冠',
+      roundGlasses: '圆框眼镜',
+      sunglasses: '墨镜',
+      monocle: '单片眼镜',
+      bowTie: '领结',
+      tie: '领带',
+      medal: '金牌',
+    },
+    takeOff: '摘下',
+    takeOffFrom: (slot: string) => `摘下${slot}`,
+    unlocksAt: (name: string, level: number) => `${name}，Lv.${level} 解锁`,
+    next: (levels: number, rank: string, names: string) => `再升 ${levels} 级进「${rank}」，解锁${names}`,
+    allUnlocked: '装扮全部解锁了',
+    needs: (name: string, level: number, rank: string, levels: number) =>
+      `${name}要到 Lv.${level}「${rank}」，还差 ${levels} 级`,
+    onPicture: '现在用的是上传的图片，装扮先存着，换回 Bot 外形就戴上。',
   },
   badge: {
     onTheJob: '入职',

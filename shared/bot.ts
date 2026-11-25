@@ -1,5 +1,7 @@
 import { z } from 'zod'
+import { listOf } from './listOf'
 import { newId, timeOfId } from './newId'
+import { MAIN_BOT_OUTFIT, OutfitId } from './outfit'
 import { strings } from './strings'
 
 export const PICKER_SHAPES = [
@@ -48,7 +50,7 @@ const avatarDataUrl = z
   .regex(/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/)
 
 /** A bot as the sidebar shows it. Parsing truncates an over-long name instead of rejecting the bot.
- * An uploaded picture (`avatar`) is drawn in place of the shape and colour. */
+ * An uploaded picture (`avatar`) is drawn in place of the shape and colour, and without the outfit. */
 export const Bot = z.object({
   id: BotId,
   name: z
@@ -59,6 +61,7 @@ export const Bot = z.object({
   shape: Shape,
   color: z.string().refine((value) => PALETTE.some((color) => color.value === value)),
   avatar: avatarDataUrl.optional(),
+  outfit: z.array(OutfitId).optional(),
 })
 export type Bot = z.infer<typeof Bot>
 
@@ -67,16 +70,19 @@ export const NewBot = Bot.extend({ sectionId: z.string().optional() })
 export type NewBot = z.infer<typeof NewBot>
 
 /** A saved bot keeps its place even when its look is no longer offered: it gets the closest colour and a shape of its own.
- * A picture it cannot draw is dropped, and the shape shows instead. */
+ * A picture it cannot draw is dropped, and the shape shows instead; so is a piece of outfit that no longer exists. */
 export const StoredBot = Bot.extend({
   shape: z.string(),
   color: z.string(),
   avatar: avatarDataUrl.optional().catch(undefined),
+  outfit: listOf(OutfitId).optional().catch(undefined),
 }).transform(
   (bot): Bot => ({
     ...bot,
     shape: Shape.safeParse(bot.shape).data ?? fallbackShape(bot.id),
     color: closestColor(bot.color),
+    // the main bot wore its crown before outfits were saved: one saved without an outfit still has it on
+    outfit: bot.outfit ?? (bot.id === MAIN_BOT_ID ? MAIN_BOT_OUTFIT : undefined),
   }),
 )
 
@@ -102,7 +108,7 @@ function rgbOf(hex: string): number[] | null {
 
 // The main agent: always present, the entry point for every request, never deletable.
 export const MAIN_BOT_ID = 'chief'
-export const MAIN_BOT: Bot = { id: MAIN_BOT_ID, name: 'CEO', shape: 'blob', color: '#1E1E22' }
+export const MAIN_BOT: Bot = { id: MAIN_BOT_ID, name: 'CEO', shape: 'blob', color: '#1E1E22', outfit: MAIN_BOT_OUTFIT }
 
 // Every new user gets it from the onboarding, pinned next to the main bot; unlike the main bot it can be deleted.
 export const secretary = (): Bot => ({

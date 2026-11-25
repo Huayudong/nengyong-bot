@@ -1,5 +1,6 @@
 import { BOT_NAME_MAX, type Bot, MAIN_BOT, MAIN_BOT_ID, type NewBot } from '../../shared/bot'
 import { SECTION_NAME_MAX, type SidebarState } from '../../shared/sidebar'
+import type { OutfitId } from '../../shared/outfit'
 import { strings } from '../../shared/strings'
 
 export const HIDDEN_NAME = strings().sidebar.sections.hidden
@@ -112,6 +113,11 @@ export const setBotLook = (
 ): SidebarState => ({
   ...state,
   bots: state.bots.map((bot) => (bot.id === id ? { ...bot, shape, color, avatar: undefined } : bot)),
+})
+
+export const setBotOutfit = (state: SidebarState, id: string, outfit: OutfitId[]): SidebarState => ({
+  ...state,
+  bots: state.bots.map((bot) => (bot.id === id ? { ...bot, outfit } : bot)),
 })
 
 /** An uploaded picture takes the place of the look; undefined puts the shape back. */

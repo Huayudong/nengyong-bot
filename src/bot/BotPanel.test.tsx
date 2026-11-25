@@ -31,9 +31,9 @@ it('opens the panel, toggles the routine, filters the library, and closes', asyn
 
 const openChiefPanel = async ({ isDebug = true } = {}) => {
   localStorage.setItem('nengyongbot:preferences', JSON.stringify({ isDebug }))
-  const { user } = renderDemoApp()
+  const { user, bridge } = renderDemoApp()
   await user.click(screen.getByRole('button', { name: '展开面板' }))
-  return { user, panel: screen.getByRole('complementary', { name: 'Bot 详情' }) }
+  return { user, bridge, panel: screen.getByRole('complementary', { name: 'Bot 详情' }) }
 }
 
 it('shows which models the bot works with, read only, and how to change them', async () => {
@@ -179,6 +179,40 @@ it('edits the avatar from the panel: each pick applies and is saved, Esc and an 
   await user.click(trigger)
   await user.click(within(panel).getByRole('button', { name: '近况' }))
   expect(within(panel).queryByRole('dialog', { name: '换个样子' })).not.toBeInTheDocument()
+})
+
+it('dresses the bot from the outfit page: an unlocked piece goes on and comes off, a locked one says how far off it is', async () => {
+  const { user, bridge } = renderDemoApp()
+  await openSecretaryPanelWith(user)
+  await user.click(screen.getByRole('button', { name: '换头像' }))
+  const editor = screen.getByRole('dialog', { name: '换个样子' })
+  await user.click(within(editor).getByRole('button', { name: '装扮' }))
+  const outfitOf = async () => (await bridge.getSidebar())?.bots.find((bot) => bot.id === 'secretary')?.outfit
+
+  await user.click(within(editor).getByRole('button', { name: '派对帽' }))
+  expect(within(editor).getByRole('button', { name: '派对帽' })).toHaveAttribute('aria-pressed', 'true')
+  expect(await outfitOf()).toEqual(['partyHat'])
+
+  await user.click(within(editor).getByRole('button', { name: '彩虹冠，Lv.99 解锁' }))
+  expect(within(editor).getByRole('status')).toHaveTextContent(/^彩虹冠要到 Lv\.99「满级」，还差 \d+ 级$/)
+  expect(await outfitOf()).toEqual(['partyHat'])
+
+  await user.click(within(editor).getByRole('button', { name: '摘下头饰' }))
+  expect(await outfitOf()).toEqual([])
+})
+
+it('lets the main bot take its gold crown off and put it back whatever its level', async () => {
+  const { user, panel, bridge } = await openChiefPanel()
+  await user.click(within(panel).getByRole('button', { name: '换头像' }))
+  await user.click(within(panel).getByRole('button', { name: '装扮' }))
+  const crown = within(panel).getByRole('button', { name: '金冠' })
+  const outfitOf = async () => (await bridge.getSidebar())?.bots.find((bot) => bot.id === 'chief')?.outfit
+  expect(crown).toHaveAttribute('aria-pressed', 'true')
+
+  await user.click(crown)
+  expect(await outfitOf()).toEqual([])
+  await user.click(crown)
+  expect(await outfitOf()).toEqual(['goldCrown'])
 })
 
 it('closes the avatar picker when its button is pressed again', async () => {

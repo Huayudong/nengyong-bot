@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useRef, useState } from 'react'
 import type { Bot } from '../../shared/bot'
+import type { OutfitId } from '../../shared/outfit'
 import { strings } from '../../shared/strings'
 import { Icon } from '../ui/Icon'
 import { POP } from '../ui/motion'
@@ -11,18 +12,21 @@ import { AvatarUpload } from './AvatarUpload'
 import { type AvatarCandidate, encodeAvatar, readAvatarFile } from './avatarImage'
 import { BotAvatar } from './BotAvatar'
 import { type Look, LookPicker } from './LookPicker'
+import { OutfitPicker } from './OutfitPicker'
 
-type Source = 'look' | 'upload'
+type Source = 'look' | 'upload' | 'outfit'
 
 interface Props {
   bot: Bot
+  level: number // its trust level: what the outfit page has unlocked
   onPick: (look: Look) => void
   onPickAvatar: (avatar: string | undefined) => void
+  onPickOutfit: (outfit: OutfitId[]) => void
 }
 
-/** The panel's avatar: pressing it opens the shape and colour picker or the uploader, and every choice applies at once.
+/** The panel's avatar: pressing it opens the shape and colour picker, the uploader or the outfits, and every choice applies at once.
  * The popover may grow past the panel's padding (`cqw`: the panel is the container), not past its edge. */
-export function AvatarEditor({ bot, onPick, onPickAvatar }: Props) {
+export function AvatarEditor({ bot, level, onPick, onPickAvatar, onPickOutfit }: Props) {
   const words = strings().bot.avatar
   const [isOpen, setIsOpen] = useState(false)
   const [source, setSource] = useState<Source>(bot.avatar ? 'upload' : 'look')
@@ -86,10 +90,10 @@ export function AvatarEditor({ bot, onPick, onPickAvatar }: Props) {
         onClick={toggle}
         className="group/avatar relative grid place-items-center rounded-full bg-none"
       >
-        <span className="flex transition-[filter] duration-150 group-hover/avatar:brightness-30 group-focus-visible/avatar:brightness-30 group-aria-expanded/avatar:brightness-30">
+        <span className="flex transition-[filter] duration-150 group-hover/avatar:brightness-30 group-focus-visible/avatar:brightness-30">
           <BotAvatar bot={bot} size={64} />
         </span>
-        <span className="absolute inset-0 grid place-items-center text-side opacity-0 transition-opacity duration-150 group-hover/avatar:opacity-100 group-focus-visible/avatar:opacity-100 group-aria-expanded/avatar:opacity-100">
+        <span className="absolute inset-0 grid place-items-center text-side opacity-0 transition-opacity duration-150 group-hover/avatar:opacity-100 group-focus-visible/avatar:opacity-100">
           <Icon name="pencil" />
         </span>
       </button>
@@ -107,6 +111,7 @@ export function AvatarEditor({ bot, onPick, onPickAvatar }: Props) {
               options={[
                 { id: 'look', label: words.tabs.look },
                 { id: 'upload', label: words.tabs.upload },
+                { id: 'outfit', label: words.tabs.outfit },
               ]}
               value={source}
               onChange={(next) => {
@@ -115,9 +120,9 @@ export function AvatarEditor({ bot, onPick, onPickAvatar }: Props) {
                 reset()
               }}
             />
-            {source === 'look' ? (
-              <LookPicker compact look={{ shape: bot.shape, color: bot.color }} onPick={onPick} />
-            ) : (
+            {source === 'look' && <LookPicker compact look={{ shape: bot.shape, color: bot.color }} onPick={onPick} />}
+            {source === 'outfit' && <OutfitPicker bot={bot} level={level} onPick={onPickOutfit} />}
+            {source === 'upload' && (
               <AvatarUpload
                 current={bot.avatar}
                 candidate={candidate}

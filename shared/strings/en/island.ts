@@ -53,6 +53,7 @@ export const island: Strings['island'] = {
     upTo: (level) => `Up to Lv.${level}`,
     reachedRank: (rank) => `Reached the ${rank} rank`,
     toRank: (levels, rank) => `${plural(levels, 'more level')} to the ${rank} rank`,
+    newOutfits: 'New outfits unlocked',
   },
   trust: {
     xp: (points, needed) => `XP ${points} / ${needed}`,

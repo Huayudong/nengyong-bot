@@ -13,6 +13,8 @@ npm run format  # 按 Biome 的规则格式化并修掉能自动修的 lint
 NENGYONGBOT_HOME=/tmp/nengyongbot-dev npm run app  # 换一个应用目录，开发数据不和日常数据混在一起
 ```
 
+一个应用目录同时只让一个实例打开。装好的应用和开发的应用各有各的 profile，Electron 的单实例锁看不见对方；再开一个会直接提示并退出（`electron/homeLock.ts`），否则后开的会把前一个正在跑的任务当成中断，结论也交不回来。
+
 ## 技术选型
 
 | 用途 | 选型 |

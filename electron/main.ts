@@ -9,6 +9,7 @@ import { strings } from '../shared/strings'
 import { appHome, DATABASE_FILE, LIBRARY_DIR, resolveDataDir } from './dataDir'
 import { registerDataDirIpc } from './dataDirIpc'
 import { createHandlers, type Handler } from './handlers'
+import { lockHome } from './homeLock'
 import { savedLanguage } from './language'
 import { createLanAccess, type LanAccess } from './lanAccess'
 import { imageResponse, miniAppResponse } from './libraryResponses'
@@ -21,13 +22,14 @@ const DEV_RESTART_CODE = process.env.NENGYONGBOT_DEV_RESTART_CODE
 
 // the installed app holds the profile's localStorage lock while it runs; a dev app sharing it silently keeps localStorage in memory
 if (DEV_URL) app.setPath('userData', `${app.getPath('userData')}-dev`)
-// a second copy would open the same database and run every routine twice; it hands over to the running one instead
+// a second copy in the same profile hands over to the running one; one with another profile needs lockHome, taken below
 if (!app.requestSingleInstanceLock()) app.exit(0)
 
 let win: BrowserWindow | null = null
 let tray: Tray | null = null // an unreferenced Tray is garbage-collected and its icon disappears
 let lan: LanAccess | null = null // set once the handlers it serves to devices exist
 let isQuitting = false
+let releaseHome: (() => void) | null = null
 
 const emit = (event: HarnessEvent) => {
   win?.webContents.send('nengyongbot:event', event)
@@ -35,6 +37,8 @@ const emit = (event: HarnessEvent) => {
 }
 
 function restart() {
+  // free the home now: the copy this one relaunches takes it as soon as this process ends
+  releaseHome?.()
   // app.relaunch() would outlive the dev server that scripts/dev.mjs stops when Electron exits
   if (DEV_RESTART_CODE) return app.exit(Number(DEV_RESTART_CODE))
   app.relaunch()
@@ -190,6 +194,17 @@ app.whenReady().then(() => {
   app.setAppUserModelId('com.nengyongbot.app')
   const home = appHome()
   setLanguage(savedLanguage(home, app.getPreferredSystemLanguages()[0] ?? app.getLocale()))
+  try {
+    releaseHome = lockHome(home)
+  } catch (error) {
+    dialog.showErrorBox(strings().main.cannotOpenData, error instanceof Error ? error.message : String(error))
+    return app.exit(1)
+  }
+  if (!releaseHome) {
+    dialog.showErrorBox(strings().main.homeInUse.title, strings().main.homeInUse.detail(home))
+    return app.exit(0)
+  }
+  app.on('will-quit', releaseHome)
   let dataDir: string
   let store: Store
   try {
